@@ -1,7 +1,12 @@
+// адрессация страниц
+
 import SwiftUI
 
 struct ContentView: View {
     @AppStorage("isRegistered") private var isRegistered = false
+    @AppStorage("userName") private var userName: String = ""
+    @AppStorage("imageName") private var imageName: String = ""
+    @AppStorage("hobbies") private var hobbies: String = ""
 
     @State private var showLaunch = true
     @State private var showOnboarding = false
@@ -31,13 +36,18 @@ struct ContentView: View {
                     showChat = true
                 })
             } else if showChat {
-                ChatView(userName: "AI Partner", userImage: "appearance1", onBack: {
+                ChatView(userName: userName, userImage: imageName, onBack: {
                     showChat = false
                 })
             } else {
-                MainTabView(onStartChat: {
-                    showChat = true
-                })
+                MainTabView(
+                    onStartChat: {
+                        showChat = true
+                    },
+                    userName: userName,
+                    imageName: imageName,
+                    hobbies: hobbies
+                )
             }
         }
     }

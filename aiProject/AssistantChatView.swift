@@ -1,3 +1,5 @@
+// чат который открывается при нажатии ассистента 
+
 import SwiftUI
 
 struct AssistantChatView: View {
@@ -17,7 +19,6 @@ struct AssistantChatView: View {
 
             VStack(spacing: 0) {
 
-                // 🔵 Header без отступов
                 HStack {
                     Button(action: { onBack() }) {
                         Image(systemName: "chevron.left")
@@ -45,7 +46,7 @@ struct AssistantChatView: View {
                 .frame(height: 50)
                 .background(Color(red: 15/255, green: 15/255, blue: 25/255))
 
-                // ✅ ScrollView без safe area без top offset
+
                 ScrollView {
                     VStack(spacing: 12) {
                         ForEach(messages, id: \.self) { message in
@@ -73,10 +74,10 @@ struct AssistantChatView: View {
                         }
                     }
                     .padding(.horizontal)
-                    .padding(.top, 8) // ✅ Минимальный правильный отступ
+                    .padding(.top, 8)
                 }
 
-                // Input зона
+
                 VStack(spacing: 8) {
                     HStack {
                         TextField("Type your message", text: $newMessage)

@@ -1,3 +1,5 @@
+// страница а артиклями 
+
 import SwiftUI
 
 struct Article: Identifiable {
@@ -8,6 +10,7 @@ struct Article: Identifiable {
 
 struct ArticlesView: View {
     @State private var selectedArticle: Article? = nil
+    @State private var showPaywall = false
 
     var body: some View {
         ZStack {
@@ -25,7 +28,9 @@ struct ArticlesView: View {
 
                     Spacer()
 
-                    Button(action: {}) {
+                    Button(action: {
+                        showPaywall = true
+                    }) {
                         Text("UNLIMITED")
                             .foregroundColor(.black)
                             .font(.caption.bold())
@@ -38,7 +43,6 @@ struct ArticlesView: View {
                 .padding(.horizontal)
                 .padding(.top, 50)
 
-                // Article cards
                 ScrollView {
                     VStack(spacing: 12) {
                         ArticleCard(image: "article1", title: "Psychologist", description: "Discuss what's on your mind and work through emotional challenges.") {
@@ -56,10 +60,11 @@ struct ArticlesView: View {
 
                 Spacer()
             }
-
-            // FULLSCREEN SHEET
             .fullScreenCover(item: $selectedArticle) { article in
                 ArticleDetailView(title: article.title, description: article.description)
+            }
+            .fullScreenCover(isPresented: $showPaywall) {
+                PaywallView()
             }
         }
     }
@@ -92,10 +97,14 @@ struct ArticleCard: View {
                         Text(title)
                             .foregroundColor(.white)
                             .font(.headline.bold())
+                            .multilineTextAlignment(.leading)
+
                         Text(description)
                             .foregroundColor(.white)
                             .font(.caption)
                             .fixedSize(horizontal: false, vertical: true)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     Spacer()
                     Image(systemName: "chevron.right.circle.fill")

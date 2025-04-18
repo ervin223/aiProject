@@ -1,3 +1,5 @@
+// опрос с ориентацией
+
 import SwiftUI
 
 struct OrientationQuestionView: View {

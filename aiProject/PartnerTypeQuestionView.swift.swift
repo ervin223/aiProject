@@ -1,3 +1,5 @@
+// опрос с аи
+
 import SwiftUI
 
 struct PartnerTypeQuestionView: View {

@@ -2,16 +2,16 @@
 //  ai_project
 //
 //  Created by Erwin on 24.02.25.
-//
 
 import SwiftUI
 import SwiftData
+import StoreKit
 
 @Model
 class Item {
     var id: UUID
     var name: String
-    
+
     init(name: String) {
         self.id = UUID()
         self.name = name
@@ -20,6 +20,8 @@ class Item {
 
 @main
 struct ai_projectApp: App {
+    @StateObject var subscriptionManager = SubscriptionManager.shared
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -38,10 +40,15 @@ struct ai_projectApp: App {
             ZStack {
                 Color.black
                     .ignoresSafeArea()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity) // Растягиваем фон
-                
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+
                 ContentView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity) // Растягиваем ContentView
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .environmentObject(subscriptionManager)
+                    .task {
+                        await subscriptionManager.loadProducts()
+                        await subscriptionManager.checkSubscriptionStatus()
+                    }
             }
         }
     }

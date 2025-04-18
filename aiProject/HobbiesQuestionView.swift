@@ -1,3 +1,5 @@
+// опрос с хобби
+
 import SwiftUI
 
 struct HobbiesQuestionView: View {

@@ -1,13 +1,15 @@
+// основная страница с созаднным партнером
+
 import SwiftUI
 
 struct PartnerView: View {
     var onStartChat: () -> Void
 
-    // Данные, которые можно позже получать из модели или @AppStorage
-    let userName = "Brad Pitt"
-    let age = 25
-    let hobbies = ["Traveling", "Yoga", "Dancing", "Movies", "Animals", "Photography"]
-    let imageName = "appearance1"
+    @AppStorage("userName") var userName: String = "AI Partner"
+    @AppStorage("imageName") var imageName: String = "appearance1"
+    @AppStorage("hobbies") var hobbies: String = "Traveling, Yoga, Dancing"
+
+    @State private var showPaywall = false
 
     var body: some View {
         ZStack {
@@ -17,7 +19,7 @@ struct PartnerView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // Навигационная панель
+                // 🔹 Header
                 HStack {
                     Text("Partner")
                         .font(.title2.bold())
@@ -25,7 +27,9 @@ struct PartnerView: View {
 
                     Spacer()
 
-                    Button(action: {}) {
+                    Button(action: {
+                        showPaywall = true
+                    }) {
                         Text("UNLIMITED")
                             .font(.caption.bold())
                             .foregroundColor(.black)
@@ -38,63 +42,70 @@ struct PartnerView: View {
                 .padding(.horizontal)
                 .padding(.top, 50)
 
-                // Аватар и имя
-                VStack(spacing: 8) {
-                    Image(imageName)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 120, height: 120)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // 🔹 Avatar
+                        Image(imageName)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 120, height: 120)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                            .shadow(radius: 10)
 
-                    Text(userName)
-                        .font(.title3.bold())
-                        .foregroundColor(.white)
+                        // 🔹 Name & Age
+                        Text(userName)
+                            .font(.title3.bold())
+                            .foregroundColor(.white)
 
-                    Text("\(age) years old")
-                        .foregroundColor(.gray)
+                        Text("25 years old")
+                            .foregroundColor(.gray)
 
-                    // Хобби
-                    Text(hobbies.joined(separator: "  "))
-                        .font(.caption)
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                }
+                        // 🔹 Hobbies
+                        Text(formattedHobbies())
+                            .font(.caption)
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
 
-                Divider().background(Color.gray.opacity(0.3))
-                    .padding(.horizontal)
-                    .padding(.top, 10)
+                        Divider()
+                            .background(Color.gray.opacity(0.3))
+                            .padding(.horizontal)
 
-                // Фото
-                HStack {
-                    Text("Photos")
-                        .foregroundColor(.white)
-                        .font(.headline)
-                    Spacer()
-                    Text("SEE ALL")
-                        .foregroundColor(.gray)
-                        .font(.caption.bold())
-                }
-                .padding(.horizontal)
-                .padding(.top, 10)
+                        // 🔹 Photos
+                        HStack {
+                            Text("Photos")
+                                .foregroundColor(.white)
+                                .font(.headline)
 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(0..<3) { _ in
-                            Image(imageName)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 100, height: 140)
-                                .cornerRadius(12)
+                            Spacer()
+
+                            Text("SEE ALL")
+                                .foregroundColor(.gray)
+                                .font(.caption.bold())
                         }
+                        .padding(.horizontal)
+
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 12) {
+                                ForEach(0..<3) { _ in
+                                    Image(imageName)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 100, height: 140)
+                                        .cornerRadius(12)
+                                        .shadow(radius: 5)
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+
+                        Spacer()
+                            .frame(height: 20)
                     }
-                    .padding(.horizontal)
                 }
 
-                Spacer()
-
-                // Кнопка как нижняя панель
+                // 🔹 Bottom Button
                 VStack(spacing: 0) {
                     Divider().background(Color.gray.opacity(0.3))
 
@@ -109,11 +120,23 @@ struct PartnerView: View {
                             .background(Color.red)
                             .cornerRadius(15)
                             .padding(.horizontal, 20)
-                            .padding(.bottom, 8) // 👈 уменьшили отступ чтобы опустить кнопку ближе
+                            .padding(.vertical, 10)
                     }
                 }
                 .background(Color(red: 15/255, green: 20/255, blue: 45/255).ignoresSafeArea())
             }
         }
+        .fullScreenCover(isPresented: $showPaywall) {
+            PaywallView()
+        }
+    }
+
+    private func formattedHobbies() -> String {
+        let emojiMap: [String: String] = [
+            "Traveling": "🌍", "Yoga": "🧘‍♀️", "Dancing": "💃",
+            "Movies": "🎬", "Animals": "🐶", "Photography": "📸"
+        ]
+        let hobbyList = hobbies.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+        return hobbyList.map { "\(emojiMap[$0] ?? "⭐️") \($0)" }.joined(separator: "  ")
     }
 }

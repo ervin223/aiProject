@@ -1,3 +1,5 @@
+// страница с ассистестами
+
 import SwiftUI
 
 struct Assistant: Identifiable {
@@ -9,6 +11,7 @@ struct Assistant: Identifiable {
 
 struct AssistantView: View {
     @State private var selectedAssistant: Assistant? = nil
+    @State private var showPaywall = false
 
     let assistants = [
         Assistant(title: "Psychologist", subtitle: "Discuss what's on your mind and work through emotional challenges.", image: "assistant1"),
@@ -34,7 +37,9 @@ struct AssistantView: View {
 
                     Spacer()
 
-                    Button(action: {}) {
+                    Button(action: {
+                        showPaywall = true
+                    }) {
                         Text("UNLIMITED")
                             .foregroundColor(.black)
                             .font(.caption.bold())
@@ -71,6 +76,9 @@ struct AssistantView: View {
         .fullScreenCover(item: $selectedAssistant) { assistant in
             AssistantChatView(assistant: assistant, onBack: { selectedAssistant = nil })
         }
+        .fullScreenCover(isPresented: $showPaywall) {
+            PaywallView()
+        }
     }
 }
 
@@ -91,11 +99,14 @@ struct AssistantCard: View {
                 Text(title)
                     .foregroundColor(.white)
                     .font(.headline.bold())
+                    .multilineTextAlignment(.leading)
 
                 Text(subtitle)
                     .foregroundColor(.gray)
                     .font(.caption)
                     .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
 
             Spacer()

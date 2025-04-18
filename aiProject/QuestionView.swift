@@ -1,3 +1,5 @@
+// общий стилизованный код для опросов
+
 import SwiftUI
 
 struct QuestionView: View {
@@ -8,7 +10,6 @@ struct QuestionView: View {
     var totalQuestions: Int
     var nextAction: () -> Void
     
-    // Иконки и флаги для каждого варианта ответа
     let icons: [String: String] = [
         "Male": "person.fill",
         "Female": "person.fill.badge.plus",
@@ -39,7 +40,6 @@ struct QuestionView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 20) {
-                // Заголовок
                 VStack(spacing: 8) {
                     Text("Welcome to\nSoulMate - AI Chat")
                         .foregroundColor(.white)
@@ -61,7 +61,6 @@ struct QuestionView: View {
                 }
                 .padding(.bottom, 10)
                 
-                // Вопрос
                 Text(title)
                     .foregroundColor(.white)
                     .font(.title2.bold())
@@ -69,7 +68,6 @@ struct QuestionView: View {
                     .padding(.horizontal, 20)
                     .padding(.bottom, 10)
                 
-                // Варианты ответов (исправленный стиль для 4,5,6 вопросов)
                 VStack(spacing: 12) {
                     ForEach(options, id: \ .self) { option in
                         Button(action: {
@@ -106,7 +104,6 @@ struct QuestionView: View {
                 }
                 .padding(.bottom, 20)
                 
-                // Кнопка "Continue" теперь стилизована единообразно
                 Button(action: nextAction) {
                     HStack {
                         Text("Continue")

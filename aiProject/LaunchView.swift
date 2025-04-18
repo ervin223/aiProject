@@ -1,8 +1,10 @@
+// страница запуска
+
 import SwiftUI
 
 struct LaunchView: View {
     @State private var progress: Double = 0.0
-    var onComplete: () -> Void  // <-- добавлено
+    var onComplete: () -> Void  
 
     var body: some View {
         ZStack {
@@ -50,7 +52,7 @@ struct LaunchView: View {
                 progress = 1.0
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                onComplete() // <-- вызываем завершение загрузки
+                onComplete()
             }
         }
     }

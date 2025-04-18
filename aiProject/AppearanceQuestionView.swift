@@ -1,3 +1,5 @@
+// опрос с картинками
+
 import SwiftUI
 
 struct AppearanceQuestionView: View {
@@ -6,7 +8,7 @@ struct AppearanceQuestionView: View {
     var totalQuestions: Int
     var nextAction: () -> Void
     
-    let availableImages = ["appearance1", "appearance2", "woman1", "woman2"] // Имена картинок в `Assets`
+    let availableImages = ["appearance1", "appearance2", "woman1", "woman2"]
     
     var body: some View {
         ZStack {

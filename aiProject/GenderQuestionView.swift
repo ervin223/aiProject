@@ -1,3 +1,5 @@
+// опрос с гендерами
+
 import SwiftUI
 
 struct GenderQuestionView: View {

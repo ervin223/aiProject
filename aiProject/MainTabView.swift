@@ -1,11 +1,16 @@
+// отдельная часть кода с табами на главной странице
+
 import SwiftUI
 
 struct MainTabView: View {
     var onStartChat: () -> Void
+    var userName: String
+    var imageName: String
+    var hobbies: String
 
     var body: some View {
         TabView {
-            PartnerView(onStartChat: onStartChat)
+            PartnerView(onStartChat: onStartChat, userName: userName, imageName: imageName, hobbies: hobbies)
                 .tabItem {
                     Image(systemName: "heart.fill")
                     Text("Partner")
@@ -23,7 +28,7 @@ struct MainTabView: View {
                     Text("Articles")
                 }
 
-            ProfileView() // временно, потом заменим на ProfileView()
+            ProfileView()
                 .tabItem {
                     Image(systemName: "person.crop.circle")
                     Text("Profile")

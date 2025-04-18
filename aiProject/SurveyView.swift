@@ -1,6 +1,12 @@
+// сервисный код для опросов
+
 import SwiftUI
 
 struct SurveyView: View {
+    @AppStorage("userName") private var storedUserName: String = ""
+    @AppStorage("imageName") private var storedImageName: String = ""
+    @AppStorage("hobbies") private var storedHobbies: String = ""
+
     @State private var currentQuestion = 1
     @State private var selectedGender: String? = nil
     @State private var selectedOrientation: String? = nil
@@ -10,6 +16,7 @@ struct SurveyView: View {
     @State private var userName: String = ""
 
     let totalQuestions = 6
+
     var surveyCompleted: () -> Void
 
     var body: some View {
@@ -21,47 +28,83 @@ struct SurveyView: View {
 
                 switch currentQuestion {
                 case 1:
-                    GenderQuestionView(selectedGender: $selectedGender, currentQuestion: currentQuestion, totalQuestions: totalQuestions, nextAction: {
-                        if let _ = selectedGender { moveToNextQuestion() }
-                    })
-                case 2:
-                    OrientationQuestionView(selectedOrientation: $selectedOrientation, currentQuestion: currentQuestion, totalQuestions: totalQuestions, nextAction: {
-                        if let _ = selectedOrientation { moveToNextQuestion() }
-                    })
-                case 3:
-                    PartnerTypeQuestionView(selectedPartnerType: $selectedPartnerType, currentQuestion: currentQuestion, totalQuestions: totalQuestions, nextAction: {
-                        if let _ = selectedPartnerType { moveToNextQuestion() }
-                    })
-                case 4:
-                    HobbiesQuestionView(selectedHobbies: $selectedHobbies, currentQuestion: currentQuestion, totalQuestions: totalQuestions, nextAction: {
-                        if !selectedHobbies.isEmpty { moveToNextQuestion() }
-                    })
-                case 5:
-                    AppearanceQuestionView(selectedAppearance: $selectedAppearance, currentQuestion: currentQuestion, totalQuestions: totalQuestions, nextAction: {
-                        if let _ = selectedAppearance { moveToNextQuestion() }
-                    })
-                case 6:
-                    NameQuestionView(userName: $userName, currentQuestion: currentQuestion, totalQuestions: totalQuestions, nextAction: {
-                        if !userName.isEmpty {
-                            surveyCompleted()
+                    QuestionView(
+                        title: "What gender are you?",
+                        options: ["Male", "Female", "Non-binary", "Other"],
+                        selectedOption: $selectedGender,
+                        currentQuestion: currentQuestion,
+                        totalQuestions: totalQuestions,
+                        nextAction: {
+                            if selectedGender != nil { moveToNextQuestion() }
                         }
-                    })
+                    )
+                case 2:
+                    QuestionView(
+                        title: "What is your orientation?",
+                        options: ["Heterosexual", "Homosexual", "Bisexual", "Asexual", "Other"],
+                        selectedOption: $selectedOrientation,
+                        currentQuestion: currentQuestion,
+                        totalQuestions: totalQuestions,
+                        nextAction: {
+                            if selectedOrientation != nil { moveToNextQuestion() }
+                        }
+                    )
+                case 3:
+                    QuestionView(
+                        title: "What type of partner AI do you want to create?",
+                        options: ["Romantic", "Friendly", "Supportive", "Intellectual"],
+                        selectedOption: $selectedPartnerType,
+                        currentQuestion: currentQuestion,
+                        totalQuestions: totalQuestions,
+                        nextAction: {
+                            if selectedPartnerType != nil { moveToNextQuestion() }
+                        }
+                    )
+                case 4:
+                    HobbiesQuestionView(
+                        selectedHobbies: $selectedHobbies,
+                        currentQuestion: currentQuestion,
+                        totalQuestions: totalQuestions,
+                        nextAction: {
+                            if !selectedHobbies.isEmpty { moveToNextQuestion() }
+                        }
+                    )
+                case 5:
+                    AppearanceQuestionView(
+                        selectedAppearance: $selectedAppearance,
+                        currentQuestion: currentQuestion,
+                        totalQuestions: totalQuestions,
+                        nextAction: {
+                            if selectedAppearance != nil { moveToNextQuestion() }
+                        }
+                    )
+                case 6:
+                    NameQuestionView(
+                        userName: $userName,
+                        currentQuestion: currentQuestion,
+                        totalQuestions: totalQuestions,
+                        nextAction: {
+                            if !userName.isEmpty {
+                                storedUserName = userName
+                                storedImageName = selectedAppearance ?? "appearance1"
+                                storedHobbies = selectedHobbies.joined(separator: ",")
+                                surveyCompleted()
+                            }
+                        }
+                    )
                 default:
-                    Text("Unknown Question")
-                        .foregroundColor(.white)
+                    EmptyView()
                 }
 
                 Spacer()
             }
-            .transition(.opacity)
-            .id(currentQuestion)
         }
     }
 
     private func moveToNextQuestion() {
-        DispatchQueue.main.async {
-            withAnimation {
-                if currentQuestion < totalQuestions { currentQuestion += 1 }
+        withAnimation {
+            if currentQuestion < totalQuestions {
+                currentQuestion += 1
             }
         }
     }

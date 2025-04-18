@@ -1,15 +1,21 @@
+// страница с настройками
+
 import SwiftUI
 
 struct ProfileView: View {
+    @State private var showPaywall = false
+
     var body: some View {
         ZStack {
-            LinearGradient(gradient: Gradient(colors: [Color.black, Color(red: 0.1, green: 0.1, blue: 0.2)]),
-                           startPoint: .top,
-                           endPoint: .bottom)
-                .ignoresSafeArea()
+            // Фон
+            LinearGradient(
+                gradient: Gradient(colors: [Color.black, Color(red: 0.1, green: 0.1, blue: 0.2)]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
 
             VStack(spacing: 16) {
-                // Header
                 HStack {
                     Text("Profile")
                         .font(.title2.bold())
@@ -17,7 +23,10 @@ struct ProfileView: View {
 
                     Spacer()
 
-                    Button(action: {}) {
+                    Button(action: {
+                        print("Tapped UNLIMITED")
+                        showPaywall = true
+                    }) {
                         Text("UNLIMITED")
                             .foregroundColor(.black)
                             .font(.caption.bold())
@@ -30,7 +39,6 @@ struct ProfileView: View {
                 .padding(.horizontal)
                 .padding(.top, 50)
 
-                // Options
                 VStack(spacing: 20) {
                     ProfileRow(title: "Terms of Use")
                     ProfileRow(title: "Privacy Policy")
@@ -41,6 +49,9 @@ struct ProfileView: View {
 
                 Spacer()
             }
+        }
+        .fullScreenCover(isPresented: $showPaywall) {
+            PaywallView()
         }
     }
 }

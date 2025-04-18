@@ -1,3 +1,5 @@
+// опрос с именем
+
 import SwiftUI
 
 struct NameQuestionView: View {

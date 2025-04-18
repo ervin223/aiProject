@@ -1,7 +1,9 @@
+// страница перед опросом
+
 import SwiftUI
 
 struct OnboardingView: View {
-    var onFinish: () -> Void  // <-- добавлено
+    var onFinish: () -> Void
     @State private var navigateToSurvey = false
 
     var body: some View {
@@ -39,7 +41,7 @@ struct OnboardingView: View {
                     .padding(.horizontal)
 
                 Button(action: {
-                    onFinish() // <-- вызываем перед переходом
+                    onFinish()
                 }) {
                     HStack {
                         Text("Let's Start!")
